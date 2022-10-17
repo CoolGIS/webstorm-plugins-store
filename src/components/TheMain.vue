@@ -124,7 +124,7 @@ function currentPageChange(page: number) {
     </el-form>
   </div>
   <div class="plugin-list">
-    <div v-if="pluginListStore.pluginList">
+    <div v-if="pluginListStore.pluginList?.count">
       <PluginListItem
         v-for="item in pluginListStore.pluginList.pluginList"
         :key="item.id"
