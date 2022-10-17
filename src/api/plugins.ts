@@ -25,11 +25,11 @@ export interface PluginList {
 }
 
 export interface GetPluginsRequest {
-  name: string;
-  minDownloads: number;
-  minRating: number;
-  sort: "name" | "downloads" | "rating" | "cDate";
-  sortType: "ASC" | "DESC";
+  name?: string;
+  minDownloads?: number;
+  minRating?: number;
+  sort?: "name" | "downloads" | "rating" | "cDate";
+  sortType?: "ASC" | "DESC";
   page: number;
   size: number;
 }

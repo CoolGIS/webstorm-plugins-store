@@ -8,12 +8,19 @@ export {};
 declare module "@vue/runtime-core" {
   export interface GlobalComponents {
     ElButton: typeof import("element-plus/es")["ElButton"];
+    ElEmpty: typeof import("element-plus/es")["ElEmpty"];
     ElForm: typeof import("element-plus/es")["ElForm"];
     ElFormItem: typeof import("element-plus/es")["ElFormItem"];
     ElInput: typeof import("element-plus/es")["ElInput"];
     ElInputNumber: typeof import("element-plus/es")["ElInputNumber"];
     ElOption: typeof import("element-plus/es")["ElOption"];
+    ElPagination: typeof import("element-plus/es")["ElPagination"];
+    ElPopover: typeof import("element-plus/es")["ElPopover"];
+    ElRate: typeof import("element-plus/es")["ElRate"];
+    ElScrollbar: typeof import("element-plus/es")["ElScrollbar"];
     ElSelect: typeof import("element-plus/es")["ElSelect"];
+    ElSkeleton: typeof import("element-plus/es")["ElSkeleton"];
+    PluginListItem: typeof import("./src/components/PluginListItem.vue")["default"];
     TheHeader: typeof import("./src/components/TheHeader.vue")["default"];
     TheMain: typeof import("./src/components/TheMain.vue")["default"];
   }

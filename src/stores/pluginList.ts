@@ -6,7 +6,7 @@ import { ElMessage } from "element-plus";
 import "element-plus/es/components/message/style/css";
 
 export const usePluginListStore = defineStore("pluginList", () => {
-  const pluginQueryResult = shallowRef<GetPluginsResponse | null>(null);
+  const pluginQueryResult = shallowRef<GetPluginsResponse>();
   const pluginList = computed(() => pluginQueryResult.value?.data);
 
   async function pluginQuery(query: GetPluginsRequest) {

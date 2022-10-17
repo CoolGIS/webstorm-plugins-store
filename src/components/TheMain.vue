@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { reactive } from "vue";
+import { defineAsyncComponent, reactive, ref } from "vue";
 import { Search } from "@element-plus/icons-vue";
 import { usePluginListStore } from "@/stores/pluginList";
+const PluginListItem = defineAsyncComponent(
+  () => import("@/components/PluginListItem.vue")
+);
 
 const form = reactive({
   name: "",
@@ -38,14 +41,27 @@ const sortTypeOptions = [
     value: "DESC",
   },
 ];
+const pluginListStore = usePluginListStore();
+const isSkeletonShow = ref(false);
+const isEmptyShow = ref(false);
+const currentPage = ref(1);
+const pageSize = ref(9);
+const total = ref(0);
 
-function pluginQuery() {
-  const pluginListStore = usePluginListStore();
-  pluginListStore.pluginQuery({
+async function pluginQuery() {
+  isSkeletonShow.value = true;
+  await pluginListStore.pluginQuery({
     ...form,
-    page: 1,
-    size: 10,
+    page: currentPage.value,
+    size: pageSize.value,
   });
+  total.value = pluginListStore.pluginList!.count;
+  isSkeletonShow.value = false;
+  isEmptyShow.value = true;
+}
+function currentPageChange(page: number) {
+  currentPage.value = page;
+  pluginQuery();
 }
 </script>
 
@@ -78,7 +94,11 @@ function pluginQuery() {
         />
       </el-form-item>
       <el-form-item label="排序字段">
-        <el-select v-model="form.sort" placeholder="请选择排序字段">
+        <el-select
+          v-model="form.sort"
+          placeholder="请选择排序字段"
+          @change="pluginQuery"
+        >
           <el-option
             v-for="item in sortOptions"
             :key="item.value"
@@ -88,7 +108,11 @@ function pluginQuery() {
         </el-select>
       </el-form-item>
       <el-form-item label="排序方式">
-        <el-select v-model="form.sortType" placeholder="请选择排序方式">
+        <el-select
+          v-model="form.sortType"
+          placeholder="请选择排序方式"
+          @change="pluginQuery"
+        >
           <el-option
             v-for="item in sortTypeOptions"
             :key="item.value"
@@ -99,6 +123,30 @@ function pluginQuery() {
       </el-form-item>
     </el-form>
   </div>
+  <div class="plugin-list">
+    <div v-if="pluginListStore.pluginList">
+      <PluginListItem
+        v-for="item in pluginListStore.pluginList.pluginList"
+        :key="item.id"
+        v-bind="item"
+      />
+    </div>
+    <div v-else>
+      <el-empty v-if="isEmptyShow" description="未查询到数据" />
+    </div>
+  </div>
+  <div class="pagination">
+    <el-pagination
+      layout="prev, pager, next"
+      :current-page="currentPage"
+      :page-size="pageSize"
+      :total="total"
+      hide-on-single-page
+      background
+      @update:current-page="currentPageChange"
+    />
+  </div>
+  <el-skeleton v-show="isSkeletonShow" :count="3" animated />
 </template>
 
 <style scoped>
@@ -116,5 +164,20 @@ function pluginQuery() {
 }
 .input-with-select {
   background-color: var(--el-fill-color-blank);
+}
+.plugin-list {
+  display: flex;
+  justify-content: center;
+}
+.plugin-list > div:first-child {
+  max-width: 1300px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
 }
 </style>
